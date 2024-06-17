@@ -1,5 +1,6 @@
-import {Action, ActionPanel, Form, Icon, LocalStorage, showToast, Toast} from "@raycast/api";
-import got from "got";
+import {Action, ActionPanel, Form, Icon, launchCommand, LaunchType, LocalStorage, showToast, Toast} from "@raycast/api";
+import { TelegramClient } from "telegram";
+import { StringSession } from "telegram/sessions";
 
 export default function Command() {
   return (
@@ -10,18 +11,25 @@ export default function Command() {
       </ActionPanel>
     }
     >
-    <Form.TextField id="message" title="Message" placeholder="The message you want to send" />
+    <Form.TextArea id="message" title="Message" placeholder="The message you want to send" />
     <Form.TextField id="userId" title="User ID" placeholder="The user ID of the recipient" />
     </Form>
   );
 }
 
 function SendMessage() {
+  
   async function handleSubmit(values: { message: string, userId: string}) {
     if (!values.message) {
       showToast({
         style: Toast.Style.Failure,
         title: "Please enter a message",
+      });
+      return;
+    } else if (!values.userId) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: "Please enter a user ID",
       });
       return;
     }
@@ -32,17 +40,20 @@ function SendMessage() {
     });
 
     try {
-      const {body} = await got.post<{message: string}>("http://localhost:3000/send-message", {
-        json: {
-          message: values.message,
-          sessionString: await LocalStorage.getItem("sessionString"),
-          userId: values.userId,
-        },
-        responseType: "json",
-      });
-    console.log(body); // Log the response body
+      const savedSession:string = await LocalStorage.getItem("savedSession") || "";
+      const SESSION = new StringSession(savedSession);
+
+if (!savedSession) {
+  await launchCommand({name: "telegram-login", type: LaunchType.UserInitiated, context: {message: "Log in to begin"}});
+  return;
+}
+
+      const client = new TelegramClient(SESSION, 12345678, 'api_hash', { connectionRetries: 5 });
+      await client.connect();
+      const message = values.message;
+      await client.sendMessage(`${values.userId}`, {message});
+    
     toast.style = Toast.Style.Success;
-    toast.title = body.message;
     toast.title = "Message sent";
     
     } catch (error) {

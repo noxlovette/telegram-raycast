@@ -2,22 +2,33 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "telegram-raycast",
   "title": "Telegram Raycast",
-  "description": "",
+  "description": "Send a message on Telegram without the distractions of a full client",
   "icon": "command-icon.png",
   "author": "noxlovette",
+  "categories": ["Communication"],
   "license": "MIT",
   "commands": [
     {
       "name": "telegram-send-message",
       "title": "Telegram Send Message",
-      "description": "",
-      "mode": "view"
+      "description": "This lets you send a quick message to one of your contacts",
+      "mode": "view",
+      "keywords": ["send", "message", "telegram", "chat", "contact", "messenger"]
+
+    },
+    {
+      "name" : "telegram-login",
+      "title": "Telegram Login",
+      "description": "This lets you login to your telegram account",
+      "mode": "view",
+      "disabledByDefault": true
     }
   ],
   "tools": null,
   "dependencies": {
     "@raycast/api": "^1.76.0",
-    "got": "^14.4.1"
+    "got": "^14.4.1",
+    "telegram": "^2.22.2"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.6",
@@ -27,6 +38,15 @@
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   },
+  "preferences": [
+    {
+      "name": "phoneNumber",
+      "type": "textfield",
+      "title": "Phone Number",
+      "description": "Please enter your phone number",
+      "required": true
+    }
+  ],
   "scripts": {
     "build": "ray build -e dist",
     "dev": "ray develop",
