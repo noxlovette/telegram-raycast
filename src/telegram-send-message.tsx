@@ -23,9 +23,7 @@ interface Contact {
   username: string;
 }
 
-export default function Command({
-  launchContext,
-}: LaunchProps<{ launchContext: { id: string; firstName?: string; lastName?: string } }>) {
+export default function Command() {
   const { data: contacts, isLoading } = useCachedPromise(async () => {
     const contacts = await LocalStorage.getItem<string>("contacts");
     return contacts ? JSON.parse(contacts) : [];
@@ -51,7 +49,7 @@ export default function Command({
               key={index}
               value={contact.id}
               title={`${contact.firstName} ${contact.lastName}`}
-              keywords={[contact.firstName, contact.lastName, contact.phoneNumber , contact.username]}
+              keywords={[contact.firstName, contact.lastName, contact.phoneNumber, contact.username]}
             />
           );
         })}
