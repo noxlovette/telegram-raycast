@@ -35,6 +35,7 @@
   "dependencies": {
     "@raycast/api": "^1.76.0",
     "@raycast/utils": "^1.16.0",
+    "@types/got": "^9.6.12",
     "got": "^14.4.1",
     "telegram": "^2.22.2"
   },
@@ -51,7 +52,7 @@
       "name": "phoneNumber",
       "type": "textfield",
       "title": "Phone Number",
-      "description": "Please enter your phone number",
+      "description": "Your phone number, international format",
       "required": true
     }
   ],

@@ -19,7 +19,7 @@ interface Contact {
   id: string;
   firstName: string;
   lastName: string;
-  phoneNumber?: string;
+  phoneNumber: string;
   username: string;
 }
 
@@ -45,13 +45,13 @@ export default function Command({
     >
       <Form.TextArea id="message" title="Message" placeholder="The message you want to send" storeValue />
       <Form.Dropdown id="contact" {...contacts} title="Receiver" placeholder="Select a contact" storeValue>
-        {contacts?.map((contact, index) => {
+        {contacts?.map((contact: Contact, index: number) => {
           return (
             <Form.Dropdown.Item
               key={index}
               value={contact.id}
               title={`${contact.firstName} ${contact.lastName}`}
-              keywords={[contact.firstName, contact.lastName, contact.phoneNumber, contact.username]}
+              keywords={[contact.firstName, contact.lastName, contact.phoneNumber , contact.username]}
             />
           );
         })}
@@ -130,13 +130,25 @@ function ReceiveContacts() {
       await client.connect();
       const contacts = await client.invoke(new Api.contacts.GetContacts({}));
       if (contacts instanceof Api.contacts.Contacts) {
-        const usersList: Contact[] = contacts.users.map((user) => ({
-          id: user.id.toString(), // Convert BigInt to string
-          firstName: user.firstName || "",
-          lastName: user.lastName || "",
-          phoneNumber: user.phone || "",
-          username: user.username || "",
-        }));
+        const usersList: Contact[] = contacts.users.map((user) => {
+          if (user instanceof Api.User) {
+            return {
+              id: user.id.toString(),
+              firstName: user.firstName || "",
+              lastName: user.lastName || "",
+              phoneNumber: user.phone || "",
+              username: user.username || "",
+            };
+          } else {
+            return {
+              id: user.id.toString(),
+              firstName: "",
+              lastName: "",
+              phoneNumber: "",
+              username: "",
+            };
+          }
+        });
 
         LocalStorage.setItem("contacts", JSON.stringify(usersList));
       }

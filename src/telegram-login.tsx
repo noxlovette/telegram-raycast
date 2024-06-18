@@ -41,7 +41,7 @@ export default function Command() {
   return (
     <Form
       searchBarAccessory={
-        <Form.LinkAccessory target="https://github.com/noxlovette/telegram-proxy/" text="Open Proxy Code" />
+        <Form.LinkAccessory target="https://github.com/noxlovette/telegram-proxy" text="Open Proxy Code" />
       }
       navigationTitle="Telegram Login"
       actions={<ActionPanel>{currentAction}</ActionPanel>}
@@ -69,7 +69,9 @@ function RequestPhoneCode({
     });
 
     try {
-      const { body } = await got.post<{ message: string }>("https://telray-proxy.up.railway.app/send-code", {
+      
+      const { body } = await got.post("https://telray-proxy.up.railway.app/send-code", {
+        // @ts-ignore
         json: {
           phoneNumber: phoneNumber,
         },
@@ -116,6 +118,7 @@ function SendPhoneCode() {
 
     try {
       const { body } = await got.post("https://telray-proxy.up.railway.app/start-client", {
+        // @ts-ignore
         json: {
           phoneNumber: await LocalStorage.getItem("phone"),
           password: values.password || "",
@@ -135,13 +138,25 @@ function SendPhoneCode() {
       await client.connect();
       const contacts = await client.invoke(new Api.contacts.GetContacts({}));
       if (contacts instanceof Api.contacts.Contacts) {
-        const usersList: Contact[] = contacts.users.map((user) => ({
-          id: user.id.toString(),
-          firstName: user.firstName || "",
-          lastName: user.lastName || "",
-          phoneNumber: user.phone || "",
-          username: user.username || "",
-        }));
+        const usersList: Contact[] = contacts.users.map((user) => {
+          if (user instanceof Api.User) {
+            return {
+              id: user.id.toString(),
+              firstName: user.firstName || "",
+              lastName: user.lastName || "",
+              phoneNumber: user.phone || "",
+              username: user.username || "",
+            };
+          } else {
+            return {
+              id: user.id.toString(),
+              firstName: "",
+              lastName: "",
+              phoneNumber: "",
+              username: "",
+            };
+          }
+        });
 
         LocalStorage.setItem("contacts", JSON.stringify(usersList));
       }
