@@ -2,31 +2,39 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "telegram-raycast",
   "title": "Telegram Raycast",
-  "description": "Send a message on Telegram without the distractions of a full client",
+  "description": "Send Telegram message without the distractions of a full client",
   "icon": "command-icon.png",
   "author": "noxlovette",
-  "categories": ["Communication"],
+  "categories": [
+    "Communication"
+  ],
   "license": "MIT",
   "commands": [
     {
       "name": "telegram-send-message",
-      "title": "Telegram Send Message",
-      "description": "This lets you send a quick message to one of your contacts",
+      "title": "Telegram Message",
+      "description": "A quick message on Telegram",
       "mode": "view",
-      "keywords": ["send", "message", "telegram", "chat", "contact", "messenger"]
-
+      "keywords": [
+        "send",
+        "message",
+        "telegram",
+        "chat",
+        "contact",
+        "messenger"
+      ]
     },
     {
-      "name" : "telegram-login",
+      "name": "telegram-login",
       "title": "Telegram Login",
-      "description": "This lets you login to your telegram account",
-      "mode": "view",
-      "disabledByDefault": true
+      "description": "Log into Telegram Raycast",
+      "mode": "view"
     }
   ],
   "tools": null,
   "dependencies": {
     "@raycast/api": "^1.76.0",
+    "@raycast/utils": "^1.16.0",
     "got": "^14.4.1",
     "telegram": "^2.22.2"
   },
